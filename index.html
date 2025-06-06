@@ -556,7 +556,85 @@ body {
    margin-bottom: 15px;
 }
 
-/* MIGLIORATA: Stampa con caratteri più grandi e leggibili - aumentati di oltre un terzo */
+/* Modal opzioni stampa */
+.print-options-modal {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0,0,0,0.5);
+   display: none;
+   z-index: 1000;
+   justify-content: center;
+   align-items: center;
+}
+
+.print-options-content {
+   background-color: white;
+   padding: 30px;
+   border-radius: 15px;
+   width: 400px;
+   max-width: 90%;
+}
+
+.print-options-header {
+   text-align: center;
+   margin-bottom: 25px;
+}
+
+.print-options-header h3 {
+   color: #1e3c72;
+   margin-bottom: 10px;
+}
+
+.print-option-group {
+   margin-bottom: 20px;
+}
+
+.print-option-group label {
+   font-weight: bold;
+   color: #495057;
+   margin-bottom: 8px;
+   display: block;
+}
+
+.print-option-group select,
+.print-option-group input[type="radio"] {
+   margin-right: 10px;
+}
+
+.radio-group {
+   display: flex;
+   gap: 15px;
+   flex-wrap: wrap;
+}
+
+.radio-option {
+   display: flex;
+   align-items: center;
+   gap: 5px;
+}
+
+.print-buttons {
+   display: flex;
+   gap: 10px;
+   justify-content: center;
+   margin-top: 25px;
+}
+
+/* Dettagli combinazione */
+.combination-details {
+   font-size: 10px;
+   color: #856404;
+   margin-top: 3px;
+   background-color: rgba(255, 193, 7, 0.1);
+   padding: 3px;
+   border-radius: 3px;
+   border: 1px solid #ffc107;
+}
+
+/* MIGLIORATA: Stampa con caratteri più grandi e opzioni colore/orientamento */
 @media print {
    body { 
        margin: 8mm;
@@ -575,6 +653,10 @@ body {
    }
    
    .btn {
+       display: none !important;
+   }
+   
+   .print-options-modal {
        display: none !important;
    }
    
@@ -632,19 +714,68 @@ body {
        page-break-inside: avoid;
    }
    
-   .supplier-card.combination-verde {
-       background-color: #e8f5e9 !important;
+   /* Orientamento verticale */
+   body.print-vertical .suppliers-container {
+       grid-template-columns: repeat(3, 1fr) !important;
+   }
+   
+   /* Orientamento orizzontale */
+   body.print-horizontal .suppliers-container {
+       grid-template-columns: repeat(5, 1fr) !important;
+   }
+   
+   /* Stampa a colori */
+   body.print-color .supplier-card.combination-verde {
+       background-color: #d4edda !important;
        border: 3px solid #28a745 !important;
    }
    
-   .supplier-card.combination-azzurro {
-       background-color: #e1f5fe !important;
+   body.print-color .supplier-card.combination-azzurro {
+       background-color: #d1ecf1 !important;
        border: 3px solid #17a2b8 !important;
    }
    
-   .supplier-card.combination-viola {
-       background-color: #f3e5f5 !important;
+   body.print-color .supplier-card.combination-viola {
+       background-color: #e2e3f3 !important;
        border: 3px solid #6f42c1 !important;
+   }
+   
+   body.print-color .supplier-header.combination-verde {
+       background: #28a745 !important;
+       color: white !important;
+   }
+   
+   body.print-color .supplier-header.combination-azzurro {
+       background: #17a2b8 !important;
+       color: white !important;
+   }
+   
+   body.print-color .supplier-header.combination-viola {
+       background: #6f42c1 !important;
+       color: white !important;
+   }
+   
+   body.print-color .totals-section {
+       background-color: #ffc107 !important;
+   }
+   
+   body.print-color .summary-box {
+       background: #ffc107 !important;
+   }
+   
+   /* Stampa in bianco e nero */
+   body.print-bw .supplier-card.combination-verde,
+   body.print-bw .supplier-card.combination-azzurro,
+   body.print-bw .supplier-card.combination-viola {
+       background-color: #f0f0f0 !important;
+       border: 3px solid #000000 !important;
+   }
+   
+   body.print-bw .supplier-header.combination-verde,
+   body.print-bw .supplier-header.combination-azzurro,
+   body.print-bw .supplier-header.combination-viola {
+       background: #f0f0f0 !important;
+       color: #000000 !important;
    }
    
    .supplier-header {
@@ -655,21 +786,6 @@ body {
        padding: 12px !important;
        border-bottom: 2px solid #000000 !important;
        text-align: center !important;
-   }
-   
-   .supplier-header.combination-verde {
-       background: #d4edda !important;
-       color: #000000 !important;
-   }
-   
-   .supplier-header.combination-azzurro {
-       background: #d1ecf1 !important;
-       color: #000000 !important;
-   }
-   
-   .supplier-header.combination-viola {
-       background: #e2e3f3 !important;
-       color: #000000 !important;
    }
    
    .form-row {
@@ -780,6 +896,13 @@ body {
        border: 1px solid #000000 !important;
    }
    
+   .combination-details {
+       font-size: 16px !important;
+       color: #000000 !important;
+       background-color: #f0f0f0 !important;
+       border: 1px solid #000000 !important;
+   }
+   
    .section-divider {
        border-bottom: 2px solid #000000 !important;
        margin: 10px 0 !important;
@@ -793,7 +916,20 @@ body {
    
    @page {
        margin: 10mm;
-       size: A4 landscape;
+   }
+   
+   /* Orientamento verticale */
+   body.print-vertical {
+       @page {
+           size: A4 portrait;
+       }
+   }
+   
+   /* Orientamento orizzontale */
+   body.print-horizontal {
+       @page {
+           size: A4 landscape;
+       }
    }
 }
 </style>
@@ -847,7 +983,7 @@ body {
            <button type="button" class="btn btn-info" id="carica-file">
                <i class="bi bi-upload"></i> Carica File
            </button>
-           <button type="button" class="btn btn-warning" onclick="window.print()">
+           <button type="button" class="btn btn-warning" id="stampa-opzioni">
                <i class="bi bi-printer"></i> Stampa
            </button>
            <button type="button" class="btn btn-danger" id="reset-programma">
@@ -930,6 +1066,71 @@ body {
    <!-- Sezione Riepilogo -->
    <div id="summary-section" class="summary-section hidden-field">
        <!-- Il riepilogo verrà generato dinamicamente -->
+   </div>
+
+   <!-- Modal Opzioni Stampa -->
+   <div id="print-options-modal" class="print-options-modal">
+       <div class="print-options-content">
+           <div class="print-options-header">
+               <h3><i class="bi bi-printer"></i> Opzioni di Stampa</h3>
+               <p>Configura le opzioni di stampa prima di procedere</p>
+           </div>
+           
+           <div class="print-option-group">
+               <label>Colore:</label>
+               <div class="radio-group">
+                   <div class="radio-option">
+                       <input type="radio" id="print-color" name="color-option" value="color" checked>
+                       <label for="print-color">A colori</label>
+                   </div>
+                   <div class="radio-option">
+                       <input type="radio" id="print-bw" name="color-option" value="bw">
+                       <label for="print-bw">Bianco e nero</label>
+                   </div>
+               </div>
+           </div>
+           
+           <div class="print-option-group">
+               <label>Fronte/Retro:</label>
+               <div class="radio-group">
+                   <div class="radio-option">
+                       <input type="radio" id="duplex-none" name="duplex-option" value="none" checked>
+                       <label for="duplex-none">Solo fronte</label>
+                   </div>
+                   <div class="radio-option">
+                       <input type="radio" id="duplex-vertical" name="duplex-option" value="vertical">
+                       <label for="duplex-vertical">Fronte/retro verticale</label>
+                   </div>
+                   <div class="radio-option">
+                       <input type="radio" id="duplex-horizontal" name="duplex-option" value="horizontal">
+                       <label for="duplex-horizontal">Fronte/retro orizzontale</label>
+                   </div>
+               </div>
+           </div>
+           
+           <div class="print-option-group">
+               <label>Orientamento:</label>
+               <div class="radio-group">
+                   <div class="radio-option">
+                       <input type="radio" id="orientation-horizontal" name="orientation-option" value="horizontal" checked>
+                       <label for="orientation-horizontal">Orizzontale</label>
+                   </div>
+                   <div class="radio-option">
+                       <input type="radio" id="orientation-vertical" name="orientation-option" value="vertical">
+                       <label for="orientation-vertical">Verticale</label>
+                   </div>
+               </div>
+           </div>
+           
+           <div class="print-buttons">
+               <button type="button" class="btn btn-warning" id="execute-print">
+                   <i class="bi bi-printer"></i> Stampa
+               </button>
+               <button type="button" class="btn btn-secondary" id="cancel-print">
+                   <i class="bi bi-x-circle"></i> Annulla
+               </button>
+           </div>
+       </div>
    </div>
 
    <!-- Input file nascosto per caricamento -->
@@ -1208,6 +1409,7 @@ $(document).ready(function() {
                    <div class="form-input">
                        <input type="number" class="quantita-prima yield-result" readonly onchange="updateSupplierConcentrato(${index})">
                        <div class="transfer-details hidden-field" style="font-size: 10px; margin-top: 2px;"></div>
+                       <div class="combination-details hidden-field" style="font-size: 10px; margin-top: 2px;"></div>
                    </div>
                </div>
 
@@ -1779,6 +1981,7 @@ $(document).ready(function() {
            // Reset sezioni
            card.find('.distribution-section').addClass('hidden-field');
            card.find('.transfer-details').addClass('hidden-field').html('');
+           card.find('.combination-details').addClass('hidden-field').html('');
            
            // Reset nome header
            card.find('.supplier-name').text('Nuovo Fornitore');
@@ -2036,7 +2239,7 @@ $(document).ready(function() {
                                <option value="40">40</option>
                                <option value="45" selected>45</option>
                                <option value="48">48</option>
-                               <option value="50">50</option>
+                               <option value="50">50">50</option>
                                <option value="55">55</option>
                                <option value="60">60</option>
                                <option value="65">65</option>
@@ -2082,7 +2285,7 @@ $(document).ready(function() {
        $('#quantita-concentrato').val(concentrato + ' kg');
    };
 
-   // Gestione combinazioni con colori
+   // Gestione combinazioni con colori - MODIFICATA per mostrare singolo + totale
    function getLastSupplierInCombination(comboValue) {
        const indexes = comboValue.split(',').map(i => parseInt(i));
        const maxIndex = Math.max(...indexes);
@@ -2131,6 +2334,13 @@ $(document).ready(function() {
        const lastSupplierInCombo = getLastSupplierInCombination(selectedCombo);
        if (lastSupplierInCombo.length > 0) {
            const quantitaPrimaField = lastSupplierInCombo.find('.quantita-prima');
+           
+           // MODIFICATA: Calcola quantità individuale del fornitore
+           const quantitaTrasformataIndividuale = parseFloat(lastSupplierInCombo.find('.quantita-trasformata').val()) || 0;
+           const resaPrimaIndividuale = parseFloat(lastSupplierInCombo.find('.resa-prima').val()) || 0;
+           const quantitaIndividuale = (quantitaTrasformataIndividuale * resaPrimaIndividuale / 100).toFixed(1);
+           
+           // Imposta il valore come totale combinazione
            quantitaPrimaField.val(totale.toFixed(1));
            quantitaPrimaField.addClass('combination-result');
            quantitaPrimaField.attr('data-combination-type', color);
@@ -2149,6 +2359,17 @@ $(document).ready(function() {
                }
            });
            
+           // MODIFICATA: Mostra dettagli combinazione con singolo + totale
+           const detailsContainer = lastSupplierInCombo.find('.combination-details');
+           detailsContainer.removeClass('hidden-field');
+           
+           const detailText = `<strong>Combinazione ${color.toUpperCase()}:</strong><br/>` +
+                             `Singolo F${lastSupplierInCombo.data('supplier-index')}: ${quantitaIndividuale} kg<br/>` +
+                             `Totale combinazione: ${totale.toFixed(1)} kg<br/>` +
+                             `<small>Dettaglio: ${combinationDetails.map(d => `F${d.supplierIndex}=${d.risultato}kg`).join(' + ')}</small>`;
+           
+           detailsContainer.html(detailText);
+           
            // Salva combinazione
            combinationData[color] = {
                indexes: combinationSupplierIndexes,
@@ -2159,8 +2380,10 @@ $(document).ready(function() {
            updateSupplierConcentrato(lastSupplierInCombo.data('supplier-index'));
            
            const colorText = color.charAt(0).toUpperCase() + color.slice(1);
-           alert(`Combinazione ${colorText} applicata! Quantità succo 1ª aggiornata a ${totale.toFixed(1)} kg\n\nDet
-           taglio:\n${combinationDetails.map(d => `F${d.supplierIndex} - ${d.nome}: ${d.quantita}kg × ${d.resa}% = ${d.risultato}kg`).join('\n')}`);
+           alert(`Combinazione ${colorText} applicata!\n` +
+                 `Quantità individuale F${lastSupplierInCombo.data('supplier-index')}: ${quantitaIndividuale} kg\n` +
+                 `Totale combinazione: ${totale.toFixed(1)} kg\n\n` +
+                 `Dettaglio:\n${combinationDetails.map(d => `F${d.supplierIndex} - ${d.nome}: ${d.quantita}kg × ${d.resa}% = ${d.risultato}kg`).join('\n')}`);
        }
    }
 
@@ -2183,6 +2406,9 @@ $(document).ready(function() {
                    
                    quantitaPrimaField.removeClass('combination-result');
                    quantitaPrimaField.removeAttr('data-combination-type');
+                   
+                   // Nascondi dettagli combinazione
+                   card.find('.combination-details').addClass('hidden-field').html('');
                    
                    // Ricalcola valore normale
                    const cardIndex = card.data('supplier-index');
@@ -2220,6 +2446,40 @@ $(document).ready(function() {
                varietaSelect.val(currentValue);
            }
        });
+   }
+
+   // Gestione stampa con opzioni
+   function showPrintOptions() {
+       $('#print-options-modal').fadeIn().css('display', 'flex');
+   }
+
+   function hidePrintOptions() {
+       $('#print-options-modal').fadeOut();
+   }
+
+   function executePrint() {
+       // Ottieni le opzioni selezionate
+       const colorOption = $('input[name="color-option"]:checked').val();
+       const duplexOption = $('input[name="duplex-option"]:checked').val();
+       const orientationOption = $('input[name="orientation-option"]:checked').val();
+       
+       // Applica le classi al body per la stampa
+       document.body.className = '';
+       document.body.classList.add(`print-${colorOption}`);
+       document.body.classList.add(`print-${orientationOption}`);
+       
+       // Nascondi il modal
+       hidePrintOptions();
+       
+       // Avvia la stampa
+       setTimeout(() => {
+           window.print();
+           
+           // Reset delle classi dopo la stampa
+           setTimeout(() => {
+               document.body.className = '';
+           }, 1000);
+       }, 100);
    }
 
    // Funzioni di salvataggio e caricamento
@@ -2297,6 +2557,7 @@ $(document).ready(function() {
                hasCombination: $(this).find('.quantita-prima').hasClass('combination-result'),
                combinationType: $(this).find('.quantita-prima').attr('data-combination-type') || '',
                combinationColor: combinationColor,
+               combinationDetails: $(this).find('.combination-details').html(),
                hasReceivedTransfers: $(this).find('.quantita-prima').hasClass('received-transfer'),
                receivedTransfers: receivedTransfers,
                distributionData: distributionData,
@@ -2543,6 +2804,11 @@ $(document).ready(function() {
                    if (!currentHeader.includes('(V)') && !currentHeader.includes('(A)') && !currentHeader.includes('(P)')) {
                        card.find('.supplier-header').html(currentHeader + ' ' + colorSymbol);
                    }
+                   
+                   // Ripristina dettagli combinazione
+                   if (fornitore.combinationDetails) {
+                       card.find('.combination-details').removeClass('hidden-field').html(fornitore.combinationDetails);
+                   }
                }
                
                // Gestisci trasferimenti ricevuti
@@ -2693,6 +2959,26 @@ $(document).ready(function() {
        }
    });
 
+   // Eventi stampa con opzioni
+   $('#stampa-opzioni').click(function() {
+       showPrintOptions();
+   });
+
+   $('#execute-print').click(function() {
+       executePrint();
+   });
+
+   $('#cancel-print').click(function() {
+       hidePrintOptions();
+   });
+
+   // Chiudi modal cliccando fuori
+   $('#print-options-modal').click(function(e) {
+       if (e.target === this) {
+           hidePrintOptions();
+       }
+   });
+
    $('#reset-programma').click(function() {
        if (confirm('Attenzione: questa operazione cancellerà tutti i dati inseriti. Continuare?')) {
            location.reload();
@@ -2703,7 +2989,7 @@ $(document).ready(function() {
    initCurrentDate();
    updateSuppliersCount();
 
-   console.log('Sistema Programma Giornaliero Trasformazione inizializzato - Versione con 5 fornitori per riga, caratteri più grandi per stampa, Q. concentrato spostata e calcolata per ogni fornitore');
+   console.log('Sistema Programma Giornaliero Trasformazione inizializzato - Versione con opzioni stampa avanzate e dettagli combinazione migliorati');
 });
 </script>
 </body>
